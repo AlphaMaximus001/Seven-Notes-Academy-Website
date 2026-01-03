@@ -1,0 +1,404 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 14px;
+  --background: #fafafa;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  --primary: #dc2626;
+  --primary-foreground: #ffffff;
+  --secondary: #f8fafc;
+  --secondary-foreground: #1e293b;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #fed7aa;
+  --accent-foreground: #ea580c;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #e2e8f0;
+  --input: transparent;
+  --input-background: #ffffff;
+  --switch-background: #cbd5e1;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --ring: #dc2626;
+  --chart-1: #f59e0b;
+  --chart-2: #3b82f6;
+  --chart-3: #10b981;
+  --chart-4: #dc2626;
+  --chart-5: #8b5cf6;
+  --radius: 0.75rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #dc2626;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #374151;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #dc2626;
+  
+  /* Guitar Tricks inspired colors */
+  --gt-primary: #dc2626;
+  --gt-primary-light: #f87171;
+  --gt-primary-dark: #b91c1c;
+  --gt-secondary: #f97316;
+  --gt-secondary-light: #fb923c;
+  --gt-secondary-dark: #ea580c;
+  --gt-neutral-50: #fafafa;
+  --gt-neutral-100: #f5f5f5;
+  --gt-neutral-200: #e5e5e5;
+  --gt-neutral-300: #d4d4d4;
+  --gt-neutral-400: #a3a3a3;
+  --gt-neutral-500: #737373;
+  --gt-neutral-600: #525252;
+  --gt-neutral-700: #404040;
+  --gt-neutral-800: #262626;
+  --gt-neutral-900: #171717;
+  
+  /* Professional gradients */
+  --gt-gradient-primary: linear-gradient(135deg, #dc2626 0%, #f97316 100%);
+  --gt-gradient-dark: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  --gt-gradient-light: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+  --gt-gradient-accent: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+  
+  /* Shadows */
+  --gt-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --gt-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --gt-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --gt-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --gt-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+  /* Consistent button heights */
+  --btn-height-sm: 2.5rem;    /* h-10 */
+  --btn-height-md: 3rem;      /* h-12 */
+  --btn-height-lg: 3.5rem;    /* h-14 */
+  --btn-height-xl: 4rem;      /* h-16 */
+}
+
+.dark {
+  --background: #0f0f23;
+  --foreground: #f8fafc;
+  --card: #1e1e3f;
+  --card-foreground: #f8fafc;
+  --popover: #1e1e3f;
+  --popover-foreground: #f8fafc;
+  --primary: #ef4444;
+  --primary-foreground: #ffffff;
+  --secondary: #1e293b;
+  --secondary-foreground: #f8fafc;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #431407;
+  --accent-foreground: #fed7aa;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #334155;
+  --input: #1e293b;
+  --ring: #ef4444;
+  --chart-1: #fbbf24;
+  --chart-2: #60a5fa;
+  --chart-3: #34d399;
+  --chart-4: #ef4444;
+  --chart-5: #a78bfa;
+  --sidebar: #1e1e3f;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #ef4444;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #334155;
+  --sidebar-ring: #ef4444;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  
+  /* Guitar Tricks inspired color tokens */
+  --color-gt-primary: var(--gt-primary);
+  --color-gt-primary-light: var(--gt-primary-light);
+  --color-gt-primary-dark: var(--gt-primary-dark);
+  --color-gt-secondary: var(--gt-secondary);
+  --color-gt-secondary-light: var(--gt-secondary-light);
+  --color-gt-secondary-dark: var(--gt-secondary-dark);
+  --color-gt-neutral-50: var(--gt-neutral-50);
+  --color-gt-neutral-100: var(--gt-neutral-100);
+  --color-gt-neutral-200: var(--gt-neutral-200);
+  --color-gt-neutral-300: var(--gt-neutral-300);
+  --color-gt-neutral-400: var(--gt-neutral-400);
+  --color-gt-neutral-500: var(--gt-neutral-500);
+  --color-gt-neutral-600: var(--gt-neutral-600);
+  --color-gt-neutral-700: var(--gt-neutral-700);
+  --color-gt-neutral-800: var(--gt-neutral-800);
+  --color-gt-neutral-900: var(--gt-neutral-900);
+  
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/**
+ * Enhanced typography with Guitar Tricks inspiration
+ */
+@layer base {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+    h1 {
+      font-size: 2.5rem;
+      font-weight: var(--font-weight-bold);
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: var(--font-weight-bold);
+      line-height: 1.2;
+      letter-spacing: -0.025em;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.3;
+    }
+
+    h4 {
+      font-size: 1.25rem;
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.4;
+    }
+
+    h5 {
+      font-size: 1.125rem;
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.4;
+    }
+
+    h6 {
+      font-size: 1rem;
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.4;
+    }
+
+    p {
+      font-size: 1rem;
+      font-weight: var(--font-weight-normal);
+      line-height: 1.6;
+    }
+
+    label {
+      font-size: 0.875rem;
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    button {
+      font-size: 0.875rem;
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.4;
+      letter-spacing: 0.025em;
+    }
+
+    input, textarea, select {
+      font-size: 0.875rem;
+      font-weight: var(--font-weight-normal);
+      line-height: 1.4;
+    }
+  }
+}
+
+/* Custom utility classes for Guitar Tricks style */
+@layer utilities {
+  .gt-gradient-primary {
+    background: var(--gt-gradient-primary);
+  }
+  
+  .gt-gradient-dark {
+    background: var(--gt-gradient-dark);
+  }
+  
+  .gt-gradient-light {
+    background: var(--gt-gradient-light);
+  }
+  
+  .gt-gradient-accent {
+    background: var(--gt-gradient-accent);
+  }
+  
+  .gt-shadow-elegant {
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.1), 0 2px 8px -2px rgba(0, 0, 0, 0.06);
+  }
+  
+  .gt-shadow-intense {
+    box-shadow: 0 10px 40px -4px rgba(0, 0, 0, 0.15), 0 4px 12px -4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .gt-glass {
+    backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .gt-glass-dark {
+    backdrop-filter: blur(16px);
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Consistent button height utilities */
+  .btn-sm {
+    height: var(--btn-height-sm);
+    min-height: var(--btn-height-sm);
+  }
+
+  .btn-md {
+    height: var(--btn-height-md);
+    min-height: var(--btn-height-md);
+  }
+
+  .btn-lg {
+    height: var(--btn-height-lg);
+    min-height: var(--btn-height-lg);
+  }
+
+  .btn-xl {
+    height: var(--btn-height-xl);
+    min-height: var(--btn-height-xl);
+  }
+
+  /* Modern spacing utilities */
+  .section-spacing {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
+  .container-spacing {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-spacing {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-spacing {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  /* Consistent rounded corners */
+  .rounded-modern {
+    border-radius: 1.5rem;
+  }
+
+  .rounded-card {
+    border-radius: 1rem;
+  }
+
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(2rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+html {
+  font-size: var(--font-size);
+  scroll-behavior: smooth;
+}
+
+/* Focus improvements for accessibility */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--gt-primary);
+  outline-offset: 2px;
+}
+
+/* Improved selection styling */
+::selection {
+  background: var(--gt-primary);
+  color: white;
+}

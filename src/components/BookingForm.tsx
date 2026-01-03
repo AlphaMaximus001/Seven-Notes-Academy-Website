@@ -1,15 +1,58 @@
-import { useState } from "react";
+import { useState, useRef, FormEvent } from "react";
+import emailjs from '@emailjs/browser';
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Badge } from "./ui/badge";
-import { Calendar, Clock, User, Music, Star, Gift, CheckCircle, ArrowRight, Zap } from "lucide-react";
+import { 
+  Calendar, Clock, User, Music, Star, Gift, 
+  CheckCircle, ArrowRight, Zap, Loader2 
+} from "lucide-react";
 
 export function BookingForm() {
   const [selectedInstrument, setSelectedInstrument] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
+  
+  // 1. New State for loading status
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 2. Ref to grab the form data
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // 3. The Email Sending Logic
+  const sendEmail = (e: FormEvent) => {
+    e.preventDefault(); // Stop the page from refreshing
+    setIsSubmitting(true);
+
+    if (formRef.current) {
+      emailjs
+        .sendForm(
+          'service_nj2vbw9',   //
+          'template_h7ewr9c',   // 🔴 REPLACE THIS
+          formRef.current,
+          {
+            publicKey: 'l5rGFfoHEs28xev4a', // 🔴 REPLACE THIS
+          }
+        )
+        .then(
+          () => {
+            alert('🎉 SUCCESS! We have received your booking request.');
+            setIsSubmitting(false);
+            // Reset the form
+            formRef.current?.reset();
+            setSelectedInstrument("");
+            setSelectedFormat("");
+            setSelectedTime("");
+          },
+          (error) => {
+            alert('❌ FAILED... ' + error.text);
+            setIsSubmitting(false);
+          }
+        );
+    }
+  };
 
   const instruments = [
     { id: "guitar", name: "Guitar", icon: "🎸", popular: true },
@@ -96,11 +139,13 @@ export function BookingForm() {
               </CardHeader>
 
               <CardContent className="space-y-8">
-                <form name="booking-form" method="POST" data-netlify="true" className="space-y-8">
-                  <input type="hidden" name="form-name" value="booking-form" />
-                  <input type="hidden" name="selected-instrument" value={selectedInstrument} />
-                  <input type="hidden" name="selected-format" value={selectedFormat} />
-                  <input type="hidden" name="selected-time" value={selectedTime} />
+                {/* 4. Attached ref and onSubmit handler */}
+                <form ref={formRef} onSubmit={sendEmail} className="space-y-8">
+                  
+                  {/* Hidden inputs updated to clean names for EmailJS */}
+                  <input type="hidden" name="selected_instrument" value={selectedInstrument} />
+                  <input type="hidden" name="selected_format" value={selectedFormat} />
+                  <input type="hidden" name="selected_time" value={selectedTime} />
 
                   {/* Personal Information */}
                   <div className="space-y-6">
@@ -246,15 +291,24 @@ export function BookingForm() {
                     />
                   </div>
 
-                  {/* Submit Button */}
+                  {/* Submit Button with Loading State */}
                   <Button 
                     type="submit"
-                    disabled={!selectedInstrument || !selectedFormat || !selectedTime}
+                    disabled={!selectedInstrument || !selectedFormat || !selectedTime || isSubmitting}
                     className="w-full bg-gradient-to-r from-gt-primary to-gt-secondary hover:from-gt-primary-dark hover:to-gt-secondary-dark text-white font-bold py-4 text-lg rounded-2xl gt-shadow-elegant transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
-                    <Zap className="h-5 w-5 mr-2" />
-                    Book My Free Trial Class
-                    <ArrowRight className="h-5 w-5 ml-2" />
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                        Sending Request...
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="h-5 w-5 mr-2" />
+                        Book My Free Trial Class
+                        <ArrowRight className="h-5 w-5 ml-2" />
+                      </>
+                    )}
                   </Button>
 
                   <p className="text-sm text-gt-neutral-400 text-center">
@@ -265,7 +319,7 @@ export function BookingForm() {
             </Card>
           </div>
 
-          {/* Benefits sidebar */}
+          {/* Benefits sidebar - UNCHANGED */}
           <div className="space-y-8">
             {/* Trial benefits */}
             <Card className="bg-gradient-to-r from-gt-primary/10 via-gt-secondary/10 to-gt-primary/10 backdrop-blur-sm border border-gt-primary/20 rounded-3xl p-8">

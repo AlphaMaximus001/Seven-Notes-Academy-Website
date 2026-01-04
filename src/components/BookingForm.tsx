@@ -1,4 +1,4 @@
-import { useState, useRef, FormEvent } from "react";
+import { useState, useRef, FormEvent } from "react"; // <--- Fixed: Added useRef here
 import emailjs from '@emailjs/browser';
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -11,47 +11,86 @@ import {
 } from "lucide-react";
 
 export function BookingForm() {
+  // 1. State for Selections
   const [selectedInstrument, setSelectedInstrument] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   
-  // 1. New State for loading status
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // 2. State for Text Inputs
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    age: "",
+    additionalInfo: ""
+  });
 
-  // 2. Ref to grab the form data
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // 3. Ref for the form element
   const formRef = useRef<HTMLFormElement>(null);
 
-  // 3. The Email Sending Logic
+  // Helper to update text inputs
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
   const sendEmail = (e: FormEvent) => {
-    e.preventDefault(); // Stop the page from refreshing
+    e.preventDefault();
     setIsSubmitting(true);
 
-    if (formRef.current) {
-      emailjs
-        .sendForm(
-          'service_nj2vbw9',   //
-          'template_h7ewr9c',   // 🔴 REPLACE THIS
-          formRef.current,
-          {
-            publicKey: 'l5rGFfoHEs28xev4a', // 🔴 REPLACE THIS
-          }
-        )
-        .then(
-          () => {
-            alert('🎉 SUCCESS! We have received your booking request.');
-            setIsSubmitting(false);
-            // Reset the form
-            formRef.current?.reset();
-            setSelectedInstrument("");
-            setSelectedFormat("");
-            setSelectedTime("");
-          },
-          (error) => {
-            alert('❌ FAILED... ' + error.text);
-            setIsSubmitting(false);
-          }
-        );
-    }
+    // 🔴 VERIFY THESE KEYS ARE CORRECT
+    const serviceID = 'service_nj2vbw9'; 
+    const adminTemplateID = 'template_weyjohn';       
+    const clientTemplateID = 'template_nzh9kbn'; // Master Client Auto Reply ID
+    const publicKey = 'l5rGFfoHEs28xev4a'; 
+
+    // Create the data package explicitly from State
+    const templateParams = {
+      // Data for Admin Email
+      form_type: 'Free Trial Booking',
+      fullName: formData.fullName,
+      email: formData.email,       // Sends as {{email}}
+      user_email: formData.email,  // Sends as {{user_email}} (For the Auto-Reply)
+      phone: formData.phone,
+      age: formData.age,
+      selected_instrument: selectedInstrument,
+      selected_format: selectedFormat,
+      selected_time: selectedTime,
+      additionalInfo: formData.additionalInfo,
+
+      // Data for Client Auto-Reply
+      reply_subject: "Booking Confirmed! 🎸 - Seven Notes Academy",
+      reply_header: "Booking Received!",
+      reply_message: "Thank you for booking a free trial class! We have received your request.",
+      reply_details: `Instrument: ${selectedInstrument}, Time: ${selectedTime}, Format: ${selectedFormat}`,
+    };
+
+    // Send Admin Email
+    emailjs.send(serviceID, adminTemplateID, templateParams, publicKey)
+      .then(() => {
+        // Send Client Email
+        return emailjs.send(serviceID, clientTemplateID, templateParams, publicKey);
+      })
+      .then(
+        () => {
+          alert('🎉 Booking Request Sent! Check your email for confirmation.');
+          setIsSubmitting(false);
+          // Reset form
+          setFormData({ fullName: "", email: "", phone: "", age: "", additionalInfo: "" });
+          setSelectedInstrument("");
+          setSelectedFormat("");
+          setSelectedTime("");
+        },
+        (error) => {
+          console.error("EmailJS Error:", error);
+          alert('❌ FAILED... ' + error.text);
+          setIsSubmitting(false);
+        }
+      );
   };
 
   const instruments = [
@@ -97,7 +136,6 @@ export function BookingForm() {
 
   return (
     <section id="booking" className="py-24 bg-gt-neutral-900 relative overflow-hidden">
-      {/* Premium dark background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-96 -right-96 w-[800px] h-[800px] bg-gt-primary/5 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-96 -left-96 w-[800px] h-[800px] bg-gt-secondary/5 rounded-full blur-3xl"></div>
@@ -105,7 +143,6 @@ export function BookingForm() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        {/* Premium header */}
         <div className="text-center space-y-6 mb-16">
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-gt-primary to-gt-secondary px-6 py-3 rounded-full">
             <Gift className="h-5 w-5 text-white" />
@@ -139,14 +176,8 @@ export function BookingForm() {
               </CardHeader>
 
               <CardContent className="space-y-8">
-                {/* 4. Attached ref and onSubmit handler */}
-                <form ref={formRef} onSubmit={sendEmail} className="space-y-8">
+                <form onSubmit={sendEmail} className="space-y-8">
                   
-                  {/* Hidden inputs updated to clean names for EmailJS */}
-                  <input type="hidden" name="selected_instrument" value={selectedInstrument} />
-                  <input type="hidden" name="selected_format" value={selectedFormat} />
-                  <input type="hidden" name="selected_time" value={selectedTime} />
-
                   {/* Personal Information */}
                   <div className="space-y-6">
                     <h3 className="text-xl font-bold text-white flex items-center">
@@ -156,12 +187,16 @@ export function BookingForm() {
                     <div className="grid md:grid-cols-2 gap-4">
                       <Input 
                         name="fullName"
+                        value={formData.fullName}
+                        onChange={handleInputChange}
                         placeholder="Full name *" 
                         required
                         className="border border-gt-neutral-600 focus:border-gt-primary rounded-xl h-12 bg-gt-neutral-700/50 text-white placeholder:text-gt-neutral-400"
                       />
                       <Input 
                         name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
                         placeholder="Email address *" 
                         type="email" 
                         required
@@ -171,6 +206,8 @@ export function BookingForm() {
                     <div className="grid md:grid-cols-2 gap-4">
                       <Input 
                         name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
                         placeholder="Phone number (WhatsApp) *" 
                         type="tel" 
                         required
@@ -178,6 +215,8 @@ export function BookingForm() {
                       />
                       <Input 
                         name="age"
+                        value={formData.age}
+                        onChange={handleInputChange}
                         placeholder="Age (optional)" 
                         type="number" 
                         className="border border-gt-neutral-600 focus:border-gt-primary rounded-xl h-12 bg-gt-neutral-700/50 text-white placeholder:text-gt-neutral-400"
@@ -286,28 +325,30 @@ export function BookingForm() {
                     <h3 className="text-xl font-bold text-white">Additional Information (Optional)</h3>
                     <Textarea 
                       name="additionalInfo"
+                      value={formData.additionalInfo}
+                      onChange={handleInputChange}
                       placeholder="Tell us about your musical background, goals, or any specific questions you have..."
                       className="border border-gt-neutral-600 focus:border-gt-primary rounded-xl bg-gt-neutral-700/50 text-white placeholder:text-gt-neutral-400 min-h-[100px] resize-none"
                     />
                   </div>
 
-                  {/* Submit Button with Loading State */}
+                  {/* Submit Button */}
                   <Button 
                     type="submit"
                     disabled={!selectedInstrument || !selectedFormat || !selectedTime || isSubmitting}
                     className="w-full bg-gradient-to-r from-gt-primary to-gt-secondary hover:from-gt-primary-dark hover:to-gt-secondary-dark text-white font-bold py-4 text-lg rounded-2xl gt-shadow-elegant transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     {isSubmitting ? (
-                      <>
+                        <>
                         <Loader2 className="h-5 w-5 mr-2 animate-spin" />
                         Sending Request...
-                      </>
+                        </>
                     ) : (
-                      <>
+                        <>
                         <Zap className="h-5 w-5 mr-2" />
                         Book My Free Trial Class
                         <ArrowRight className="h-5 w-5 ml-2" />
-                      </>
+                        </>
                     )}
                   </Button>
 
@@ -321,7 +362,6 @@ export function BookingForm() {
 
           {/* Benefits sidebar - UNCHANGED */}
           <div className="space-y-8">
-            {/* Trial benefits */}
             <Card className="bg-gradient-to-r from-gt-primary/10 via-gt-secondary/10 to-gt-primary/10 backdrop-blur-sm border border-gt-primary/20 rounded-3xl p-8">
               <div className="space-y-6">
                 <div className="text-center">
@@ -344,7 +384,6 @@ export function BookingForm() {
               </div>
             </Card>
 
-            {/* Quick stats */}
             <Card className="bg-gt-neutral-800/50 backdrop-blur-sm border border-gt-neutral-700/50 rounded-3xl p-6">
               <div className="space-y-6">
                 <h3 className="text-xl font-bold text-white text-center">Why Students Choose Us</h3>
@@ -364,7 +403,6 @@ export function BookingForm() {
               </div>
             </Card>
 
-            {/* Contact info */}
             <Card className="bg-gt-neutral-800/50 backdrop-blur-sm border border-gt-neutral-700/50 rounded-3xl p-6">
               <div className="space-y-4">
                 <h3 className="text-xl font-bold text-white">Need Help?</h3>
